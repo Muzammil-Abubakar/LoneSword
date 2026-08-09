@@ -376,12 +376,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2082720026754524255}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3557760354800128191}
+  m_Father: {fileID: 2953376157121749362}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &403135176937118974
 SkinnedMeshRenderer:
@@ -1213,14 +1213,47 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7135512195292501922}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.014752731, y: 0.0000000036672896, z: -0.00000019996709, w: 0.9998912}
-  m_LocalPosition: {x: 0.00000006498344, y: 1.001165, z: -0.009497832}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.001165, z: -0.009497832}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 805920208198222738}
   - {fileID: 7571462599112247450}
   - {fileID: 2837212648247308362}
+  m_Father: {fileID: 2953376157121749362}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7291346064713606057
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2953376157121749362}
+  m_Layer: 0
+  m_Name: CharacterModel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2953376157121749362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291346064713606057}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6859162802099012097}
+  - {fileID: 9148653597549740597}
   m_Father: {fileID: 3557760354800128191}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7580305442442475607
@@ -1330,6 +1363,7 @@ GameObject:
   - component: {fileID: 3557760354800128191}
   - component: {fileID: 6146675744028595923}
   - component: {fileID: 9069360920183833917}
+  - component: {fileID: 5934183000398353215}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1350,8 +1384,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6859162802099012097}
-  - {fileID: 9148653597549740597}
+  - {fileID: 2953376157121749362}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6146675744028595923
@@ -1367,7 +1400,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: a3e52ce4eca6512458ef889cd40d3a47, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -1388,6 +1421,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed81f7c6ab604224f97f9b60088ab99e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
+  walkSpeed: 2
+  runSpeed: 5
+  rotationSpeed: 10
+--- !u!143 &5934183000398353215
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7898436239112378399}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2.12
+  m_Radius: 0.29
+  m_SlopeLimit: 45
+  m_StepOffset: 0.65
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.05, z: 0}
 --- !u!1 &7916797282836547296
 GameObject:
   m_ObjectHideFlags: 0

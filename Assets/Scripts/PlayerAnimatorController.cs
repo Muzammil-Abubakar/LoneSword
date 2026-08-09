@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -46,47 +47,35 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void Move()
     {
-        if (isPlayingAction)
-            return;
-
         Vector2 inputVector = input.Player.Move.ReadValue<Vector2>();
 
         Vector3 movement = new Vector3(inputVector.x, 0f, inputVector.y);
 
-        bool isMoving = movement != Vector3.zero;
+        bool isMoving = inputVector != Vector2.zero;
         bool isRunning = input.Player.Run.IsPressed();
 
         float speed = isRunning ? runSpeed : walkSpeed;
 
         characterController.Move(movement * speed * Time.deltaTime);
 
+        float currentSpeed = movement.magnitude * speed;
+
+        animator.SetFloat("Speed", currentSpeed, 0.15f, Time.deltaTime);
+
         if (!isMoving)
-        {
-            animator.Play("Idle");
             return;
-        }
 
         Quaternion targetRotation = Quaternion.LookRotation(movement);
+
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             targetRotation,
             rotationSpeed * Time.deltaTime
         );
-
-        if (isRunning)
-        {
-            animator.Play("Run");
-        }
-        else
-        {
-            animator.Play("Walk");
-        }
     }
 
     private void OnIdle(InputAction.CallbackContext context)
     {
-        if (!isPlayingAction)
-            animator.Play("Idle");
     }
 
     private void OnSlash(InputAction.CallbackContext context)
@@ -94,9 +83,7 @@ public class PlayerAnimationController : MonoBehaviour
         if (isPlayingAction)
             return;
 
-        isPlayingAction = true;
-        animator.Play("Slash");
-        Invoke(nameof(FinishAction), GetAnimationLength("Slash"));
+        StartCoroutine(PlayAction("Slash"));
     }
 
     private void OnDeath(InputAction.CallbackContext context)
@@ -104,19 +91,26 @@ public class PlayerAnimationController : MonoBehaviour
         if (isPlayingAction)
             return;
 
+        StartCoroutine(PlayAction("Death"));
+    }
+
+    private IEnumerator PlayAction(string stateName)
+    {
         isPlayingAction = true;
-        animator.Play("Death");
-        Invoke(nameof(FinishAction), GetAnimationLength("Death"));
-    }
 
-    private void FinishAction()
-    {
-        isPlayingAction = false;
-    }
+        animator.Play(stateName);
 
-    private float GetAnimationLength(string stateName)
-    {
+        // Wait one frame so Animator actually enters the new state.
+        yield return null;
+
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        return stateInfo.length;
+
+        // Wait for the animation to finish.
+        yield return new WaitForSeconds(stateInfo.length);
+
+        isPlayingAction = false;
+
+        // Return to the Movement Blend Tree.
+        animator.Play("Movement");
     }
 }
