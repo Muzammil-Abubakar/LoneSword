@@ -105,3 +105,10 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Large Unity assets
+*.fbx
+*.FBX
+*.png
+*.jpg
+*.jpeg
