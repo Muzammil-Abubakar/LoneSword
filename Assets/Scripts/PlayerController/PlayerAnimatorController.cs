@@ -21,10 +21,15 @@ public class PlayerAnimatorController : MonoBehaviour
     private void OnEnable()
     {
         input.Player.Enable();
+
+        input.Player.Slash.performed += OnSlash;
     }
+
 
     private void OnDisable()
     {
+        input.Player.Slash.performed -= OnSlash;
+
         input.Player.Disable();
     }
 
@@ -72,5 +77,11 @@ public class PlayerAnimatorController : MonoBehaviour
             targetRotation,
             rotationSpeed * Time.deltaTime
         );
+    }
+    
+    private void OnSlash(
+        UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        animator.SetTrigger("Slash");
     }
 }
