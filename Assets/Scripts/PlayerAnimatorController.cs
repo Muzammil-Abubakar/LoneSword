@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerAnimatorController : MonoBehaviour
 {
@@ -11,8 +10,6 @@ public class PlayerAnimatorController : MonoBehaviour
     [SerializeField] private float runSpeed = 5f;
     [SerializeField] private float rotationSpeed = 10f;
 
-    private bool isPlayingAction;
-
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -23,17 +20,11 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void OnEnable()
     {
-        input.Player.Slash.performed += OnSlash;
-        input.Player.Death.performed += OnDeath;
-
         input.Player.Enable();
     }
 
     private void OnDisable()
     {
-        input.Player.Slash.performed -= OnSlash;
-        input.Player.Death.performed -= OnDeath;
-
         input.Player.Disable();
     }
 
@@ -41,7 +32,6 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         Move();
     }
-
 
     private void Move()
     {
@@ -56,16 +46,13 @@ public class PlayerAnimatorController : MonoBehaviour
         bool isMoving = movement != Vector3.zero;
         bool isRunning = input.Player.Run.IsPressed();
 
-
         float speed = isRunning ? runSpeed : walkSpeed;
-
 
         characterController.Move(
             movement * speed * Time.deltaTime
         );
 
-
-        // Controls Idle/Walk/Run Blend Tree
+        // Controls Idle / Walk / Run Blend Tree
         float animationSpeed = movement.magnitude * speed;
 
         animator.SetFloat(
@@ -75,10 +62,8 @@ public class PlayerAnimatorController : MonoBehaviour
             Time.deltaTime
         );
 
-
-        if (!isMoving || isPlayingAction)
+        if (!isMoving)
             return;
-
 
         Quaternion targetRotation = Quaternion.LookRotation(movement);
 
@@ -87,51 +72,5 @@ public class PlayerAnimatorController : MonoBehaviour
             targetRotation,
             rotationSpeed * Time.deltaTime
         );
-    }
-
-
-    private void OnSlash(InputAction.CallbackContext context)
-    {
-        if (isPlayingAction)
-            return;
-
-        animator.Play("Slash");
-
-        isPlayingAction = true;
-
-        Invoke(
-            nameof(FinishAction),
-            GetCurrentAnimationLength()
-        );
-    }
-
-
-    private void OnDeath(InputAction.CallbackContext context)
-    {
-        if (isPlayingAction)
-            return;
-
-        animator.Play("Death");
-
-        isPlayingAction = true;
-
-        Invoke(
-            nameof(FinishAction),
-            GetCurrentAnimationLength()
-        );
-    }
-
-
-    private void FinishAction()
-    {
-        isPlayingAction = false;
-    }
-
-
-    private float GetCurrentAnimationLength()
-    {
-        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
-
-        return state.length;
     }
 }
