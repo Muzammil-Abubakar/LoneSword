@@ -5,6 +5,9 @@ public class PlayerAnimatorController : MonoBehaviour
     private Animator animator;
     private CharacterController characterController;
     private PlayerInputActions input;
+    private bool slash2Triggered;
+    private bool isSlashing;
+    private bool canCombo;
 
     [SerializeField] private float walkSpeed = 2f;
     [SerializeField] private float runSpeed = 5f;
@@ -35,7 +38,10 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void Update()
     {
-        Move();
+        if (!isSlashing)
+        {
+            Move();
+        }
     }
 
     private void Move()
@@ -82,6 +88,54 @@ public class PlayerAnimatorController : MonoBehaviour
     private void OnSlash(
         UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        animator.SetTrigger("Slash");
+        if (!isSlashing)
+        {
+            isSlashing = true;
+            slash2Triggered = false;
+
+            animator.SetTrigger("Slash1");
+        }
+        else if (canCombo)
+        {
+            slash2Triggered = true;
+            animator.SetTrigger("Slash2");
+        }
+    }
+    
+    public void OpenComboWindow()
+    {
+        canCombo = true;
+        Debug.unityLogger.Log("Open Combo Window");  
+    }
+    
+    public void CloseComboWindow()
+    {
+        canCombo = false;
+
+        if (!slash2Triggered)
+        {
+            isSlashing = false;
+        }
+    }
+    
+    public void EndSlash1()
+    {
+        if (!canCombo)
+        {
+            isSlashing = false;
+        }
+    }
+    
+    public void EndSlash()
+    {
+        isSlashing = false;
+        canCombo = false;
+        Debug.unityLogger.Log("Slash End");  
+    }
+    
+    public void Testing()
+    {
+        
+        Debug.unityLogger.Log("TestPass");  
     }
 }
