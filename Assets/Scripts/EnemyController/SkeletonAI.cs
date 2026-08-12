@@ -6,6 +6,7 @@ public class SkeletonAI : MonoBehaviour
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float rotationSpeed = 8f;
+    [SerializeField] private float stopDistance = 1.5f;
 
     private CharacterController characterController;
     private Animator animator;
@@ -32,16 +33,18 @@ public class SkeletonAI : MonoBehaviour
 
         if (distance <= detectionRange)
         {
-            ChasePlayer();
+            if (distance > stopDistance)
+            {
+                ChasePlayer();
+            }
+            else
+            {
+                StopMoving();
+            }
         }
         else
         {
-            animator.SetFloat(
-                "Speed",
-                0f,
-                0.15f,
-                Time.deltaTime
-            );
+            StopMoving();
         }
     }
 
@@ -89,6 +92,17 @@ public class SkeletonAI : MonoBehaviour
     {
         isHit = false;
     }
+    
+    private void StopMoving()
+    {
+        animator.SetFloat(
+            "Speed",
+            0f,
+            0.15f,
+            Time.deltaTime
+        );
+    }
+
 
     private void OnDrawGizmosSelected()
     {
