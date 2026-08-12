@@ -128,13 +128,13 @@ public class PlayerAnimatorController : MonoBehaviour
     public void OpenComboWindow()
     {
         canCombo = true;
-        Debug.Log("Combo Window OPEN");
+        
     }
 
     public void CloseComboWindow()
     {
         canCombo = false;
-        Debug.Log("Combo Window CLOSED");
+        
     }
 
     // Called when Slash1 actually finishes.
@@ -180,7 +180,7 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         EndAttack();
 
-        Debug.Log("Slash End");
+        
     }
 
     private void EndAttack()

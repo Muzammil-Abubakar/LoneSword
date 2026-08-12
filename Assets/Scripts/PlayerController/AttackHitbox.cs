@@ -1,8 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackHitbox : MonoBehaviour
 {
     private Collider hitboxCollider;
+
+    private HashSet<SkeletonCombat> hitTargets =
+        new HashSet<SkeletonCombat>();
 
     private void Awake()
     {
@@ -13,7 +17,10 @@ public class AttackHitbox : MonoBehaviour
 
     public void EnableHitbox()
     {
+        hitTargets.Clear();
+
         hitboxCollider.enabled = true;
+        
     }
 
     public void DisableHitbox()
@@ -23,6 +30,26 @@ public class AttackHitbox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Hit: " + other.gameObject.name);
+        if (!other.CompareTag("Enemy"))
+        {
+            return;
+        }
+
+        SkeletonCombat skeleton =
+            other.GetComponentInParent<SkeletonCombat>();
+
+        if (skeleton == null)
+        {
+            return;
+        }
+
+        if (hitTargets.Contains(skeleton))
+        {
+            return;
+        }
+
+        hitTargets.Add(skeleton);
+
+        skeleton.TakeHit();
     }
 }

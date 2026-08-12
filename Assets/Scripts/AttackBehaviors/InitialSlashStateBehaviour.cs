@@ -78,19 +78,6 @@ public class InitialSlashStateBehaviour : StateMachineBehaviour
         AnimatorStateInfo stateInfo,
         int layerIndex)
     {
-        // Always make sure the hitbox is off.
-        if (hitboxEnabled)
-        {
-            hitboxEnabled = false;
-            player.DisableHitbox();
-        }
-
-        // Always close the combo window when leaving Slash1.
-        if (comboWindowOpen)
-        {
-            comboWindowOpen = false;
-            player.CloseComboWindow();
-        }
 
         // Tell the controller Slash1 is finished.
         player.CompleteSlash1();
