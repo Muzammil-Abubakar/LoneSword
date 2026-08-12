@@ -9,6 +9,7 @@ public class SkeletonAI : MonoBehaviour
 
     private CharacterController characterController;
     private Animator animator;
+    private bool isHit;
 
     private void Awake()
     {
@@ -19,6 +20,9 @@ public class SkeletonAI : MonoBehaviour
     private void Update()
     {
         if (player == null)
+            return;
+
+        if (isHit)
             return;
 
         float distance = Vector3.Distance(
@@ -71,6 +75,19 @@ public class SkeletonAI : MonoBehaviour
             0.15f,
             Time.deltaTime
         );
+    }
+    
+    public void StartHitReaction()
+    {
+        isHit = true;
+
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Hit");
+    }
+    
+    public void EndHitReaction()
+    {
+        isHit = false;
     }
 
     private void OnDrawGizmosSelected()
