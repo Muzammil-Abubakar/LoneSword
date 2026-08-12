@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class FinalSlashStateBehaviour : StateMachineBehaviour
 {
@@ -58,4 +58,4 @@ public class FinalSlashStateBehaviour : StateMachineBehaviour
         // Slash2 is the end of the attack sequence.
         player.EndSlash();
     }
-}
+}*/

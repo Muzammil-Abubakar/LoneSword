@@ -16,6 +16,9 @@ MonoBehaviour:
   hitEnd: 0.55
   comboStart: 0.25
   comboEnd: 0.7
+  player: {fileID: 0}
+  hitboxEnabled: 0
+  comboWindowOpen: 0
 --- !u!1102 &-5001652019306883293
 AnimatorState:
   serializedVersion: 6
@@ -42,34 +45,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &-4322911098470027841
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Slash2
-  m_Speed: 1.2
-  m_CycleOffset: 0
-  m_Transitions:
-  - {fileID: 8326664332703901714}
-  m_StateMachineBehaviours:
-  - {fileID: 4057943818596065661}
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: f43f896d897269f4d8c859644e4c54ae, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1107 &-1494444056350789453
 AnimatorStateMachine:
   serializedVersion: 7
@@ -84,9 +59,6 @@ AnimatorStateMachine:
     m_Position: {x: 120, y: 130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3714707462714721542}
-    m_Position: {x: -180, y: 300, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -4322911098470027841}
     m_Position: {x: 120, y: 300, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
@@ -99,6 +71,20 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 130, y: 420, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -5001652019306883293}
+--- !u!114 &-1345401893925054964
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db96a8e54455ecf40bdef1d679850ac9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SingleSlashStateBehaviour
+  hitStart: 0.42
+  hitEnd: 0.55
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -185,31 +171,6 @@ BlendTree:
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
---- !u!1101 &2216275573029097206
-AnimatorStateTransition:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Slash2
-    m_EventTreshold: 0
-  m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: -4322911098470027841}
-  m_Solo: 0
-  m_Mute: 0
-  m_IsExit: 0
-  serializedVersion: 3
-  m_TransitionDuration: 0.6720806
-  m_TransitionOffset: 0
-  m_ExitTime: 0.6667784
-  m_HasExitTime: 1
-  m_HasFixedDuration: 1
-  m_InterruptionSource: 0
-  m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
 --- !u!1102 &3714707462714721542
 AnimatorState:
   serializedVersion: 6
@@ -222,9 +183,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 3746483200926748343}
-  - {fileID: 2216275573029097206}
   m_StateMachineBehaviours:
-  - {fileID: -5578995441709032780}
+  - {fileID: -1345401893925054964}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -253,45 +213,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0.1329135
-  m_ExitTime: 0.84893286
-  m_HasExitTime: 1
-  m_HasFixedDuration: 1
-  m_InterruptionSource: 0
-  m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
---- !u!114 &4057943818596065661
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d1b4e2fccf9e47468fd8465dc2da54c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FinalSlashStateBehaviour
-  hitStart: 0.45
-  hitEnd: 0.55
---- !u!1101 &8326664332703901714
-AnimatorStateTransition:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_Conditions: []
-  m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: -5001652019306883293}
-  m_Solo: 0
-  m_Mute: 0
-  m_IsExit: 0
-  serializedVersion: 3
-  m_TransitionDuration: 0.40701127
+  m_TransitionDuration: 0.3497876
   m_TransitionOffset: 0
-  m_ExitTime: 0.97803074
+  m_ExitTime: 0.7234328
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -318,7 +242,7 @@ AnimatorStateTransition:
   m_TransitionOffset: 0
   m_ExitTime: 0.75
   m_HasExitTime: 0
-  m_HasFixedDuration: 1
+  m_HasFixedDuration: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1

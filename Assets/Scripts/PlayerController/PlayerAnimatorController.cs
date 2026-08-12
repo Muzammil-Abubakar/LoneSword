@@ -8,8 +8,10 @@ public class PlayerAnimatorController : MonoBehaviour
     private AttackHitbox attackHitbox;
 
     private bool isSlashing;
-    private bool canCombo;
-    private bool slash2Triggered;
+
+    // Movement input is sampled every frame.
+    // While attacking, it is deliberately not applied.
+    private Vector2 currentMoveInput;
 
     [SerializeField] private float walkSpeed = 2f;
     [SerializeField] private float runSpeed = 5f;
@@ -25,7 +27,9 @@ public class PlayerAnimatorController : MonoBehaviour
 
         if (attackHitbox == null)
         {
-            Debug.LogError("PlayerAnimatorController could not find an AttackHitbox.");
+            Debug.LogError(
+                "PlayerAnimatorController could not find an AttackHitbox."
+            );
         }
     }
 
@@ -43,23 +47,27 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void Update()
     {
-        if (!isSlashing)
+        // Always read the latest input.
+        // We do NOT apply it while attacking.
+        currentMoveInput = input.Player.Move.ReadValue<Vector2>();
+
+        if (isSlashing)
         {
-            Move();
+            return;
         }
+
+        Move(currentMoveInput);
     }
 
-    private void Move()
+    private void Move(Vector2 inputVector)
     {
-        Vector2 inputVector = input.Player.Move.ReadValue<Vector2>();
-
         Vector3 movement = new Vector3(
             inputVector.x,
             0f,
             inputVector.y
         );
 
-        bool isMoving = movement != Vector3.zero;
+        bool isMoving = movement.sqrMagnitude > 0.001f;
         bool isRunning = input.Player.Run.IsPressed();
 
         float speed = isRunning ? runSpeed : walkSpeed;
@@ -80,7 +88,8 @@ public class PlayerAnimatorController : MonoBehaviour
             return;
         }
 
-        Quaternion targetRotation = Quaternion.LookRotation(movement);
+        Quaternion targetRotation =
+            Quaternion.LookRotation(movement);
 
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
@@ -89,63 +98,44 @@ public class PlayerAnimatorController : MonoBehaviour
         );
     }
 
+    // --------------------------------------------------
+    // SLASH
+    // --------------------------------------------------
+
     private void OnSlash(
         UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (!isSlashing)
+        if (isSlashing)
         {
-            StartSlash();
             return;
         }
 
-        if (canCombo)
-        {
-            StartSlash2();
-        }
+        StartSlash();
     }
 
     private void StartSlash()
     {
         isSlashing = true;
-        slash2Triggered = false;
-        canCombo = false;
+
+        // Make sure the locomotion animation is not
+        // carrying a stale movement value into the attack.
 
         animator.SetTrigger("Slash1");
     }
 
-    private void StartSlash2()
+    public void EndSlash()
     {
-        slash2Triggered = true;
-        canCombo = false;
-
-        animator.SetTrigger("Slash2");
+        EndAttack();
     }
 
-    // --------------------------------------------------
-    // COMBO
-    // --------------------------------------------------
-
-    public void OpenComboWindow()
+    private void EndAttack()
     {
-        canCombo = true;
         
-    }
+        isSlashing = false;
 
-    public void CloseComboWindow()
-    {
-        canCombo = false;
-        
-    }
+        // Reset the animation's movement value immediately.
 
-    // Called when Slash1 actually finishes.
-    // If Slash2 was triggered, keep the player locked.
-    // Otherwise, the attack sequence is finished.
-    public void CompleteSlash1()
-    {
-        if (!slash2Triggered)
-        {
-            EndAttack();
-        }
+        DisableHitbox();
     }
 
     // --------------------------------------------------
@@ -154,6 +144,8 @@ public class PlayerAnimatorController : MonoBehaviour
 
     public void EnableHitbox()
     {
+        
+        animator.SetFloat("Speed", 0f);
         if (attackHitbox == null)
         {
             return;
@@ -170,25 +162,5 @@ public class PlayerAnimatorController : MonoBehaviour
         }
 
         attackHitbox.DisableHitbox();
-    }
-
-    // --------------------------------------------------
-    // FINAL ATTACK
-    // --------------------------------------------------
-
-    public void EndSlash()
-    {
-        EndAttack();
-
-        
-    }
-
-    private void EndAttack()
-    {
-        isSlashing = false;
-        canCombo = false;
-        slash2Triggered = false;
-
-        DisableHitbox();
     }
 }

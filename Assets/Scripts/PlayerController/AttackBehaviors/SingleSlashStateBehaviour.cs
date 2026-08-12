@@ -1,19 +1,13 @@
-/*using UnityEngine;
+using UnityEngine;
 
-public class InitialSlashStateBehaviour : StateMachineBehaviour
+public class SingleSlashStateBehaviour : StateMachineBehaviour
 {
     [Header("Hitbox")]
     [SerializeField] private float hitStart = 0.25f;
     [SerializeField] private float hitEnd = 0.55f;
 
-    [Header("Combo Window")]
-    [SerializeField] private float comboStart = 0.60f;
-    [SerializeField] private float comboEnd = 0.85f;
-
     private PlayerAnimatorController player;
-
     private bool hitboxEnabled;
-    private bool comboWindowOpen;
 
     public override void OnStateEnter(
         Animator animator,
@@ -23,7 +17,6 @@ public class InitialSlashStateBehaviour : StateMachineBehaviour
         player = animator.GetComponent<PlayerAnimatorController>();
 
         hitboxEnabled = false;
-        comboWindowOpen = false;
     }
 
     public override void OnStateUpdate(
@@ -33,12 +26,6 @@ public class InitialSlashStateBehaviour : StateMachineBehaviour
     {
         float time = stateInfo.normalizedTime;
 
-        UpdateHitbox(time);
-        UpdateComboWindow(time);
-    }
-
-    private void UpdateHitbox(float time)
-    {
         bool shouldBeActive =
             time >= hitStart &&
             time < hitEnd;
@@ -55,31 +42,22 @@ public class InitialSlashStateBehaviour : StateMachineBehaviour
         }
     }
 
-    private void UpdateComboWindow(float time)
-    {
-        bool shouldBeOpen =
-            time >= comboStart &&
-            time < comboEnd;
-
-        if (shouldBeOpen && !comboWindowOpen)
-        {
-            comboWindowOpen = true;
-            player.OpenComboWindow();
-        }
-        else if (!shouldBeOpen && comboWindowOpen)
-        {
-            comboWindowOpen = false;
-            player.CloseComboWindow();
-        }
-    }
-
     public override void OnStateExit(
         Animator animator,
         AnimatorStateInfo stateInfo,
         int layerIndex)
     {
+        // Safety cleanup.
+        // The hitbox must never remain active after
+        // leaving the attack state.
+        if (hitboxEnabled)
+        {
+            hitboxEnabled = false;
+            player.DisableHitbox();
+        }
 
-        // Tell the controller Slash1 is finished.
-        player.CompleteSlash1();
+        // Tell the player controller that the
+        // attack animation has completely finished.
+        player.EndSlash();
     }
-}*/
+}
