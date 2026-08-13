@@ -14,13 +14,19 @@ public class SkeletonAttackHitbox : MonoBehaviour
 
         if (hitboxCollider == null)
         {
-            
+            Debug.LogError(
+                $"SkeletonAttackHitbox on {gameObject.name} could not find a Collider."
+            );
 
             return;
         }
 
         hitboxCollider.enabled = false;
     }
+
+    // --------------------------------------------------
+    // HITBOX
+    // --------------------------------------------------
 
     public void EnableHitbox()
     {
@@ -29,12 +35,11 @@ public class SkeletonAttackHitbox : MonoBehaviour
             return;
         }
 
-        // Allow targets to be hit again during a new attack.
+        // Allow the player to be hit again
+        // during the next attack.
         hitTargets.Clear();
 
         hitboxCollider.enabled = true;
-
-        
     }
 
     public void DisableHitbox()
@@ -45,9 +50,11 @@ public class SkeletonAttackHitbox : MonoBehaviour
         }
 
         hitboxCollider.enabled = false;
-
-        
     }
+
+    // --------------------------------------------------
+    // COLLISION
+    // --------------------------------------------------
 
     private void OnTriggerEnter(Collider other)
     {
@@ -56,27 +63,30 @@ public class SkeletonAttackHitbox : MonoBehaviour
             return;
         }
 
-        GameObject playerObject = other.transform.root.gameObject;
+        GameObject playerObject =
+            other.transform.root.gameObject;
 
+        // Prevent the same player from being hit
+        // multiple times during one attack.
         if (hitTargets.Contains(playerObject))
         {
             return;
         }
 
-        hitTargets.Add(playerObject);
+        PlayerManager playerManager =
+            playerObject.GetComponent<PlayerManager>();
 
-        PlayerAnimatorController player =
-            playerObject.GetComponent<PlayerAnimatorController>();
-
-        if (player == null)
+        if (playerManager == null)
         {
             Debug.LogError(
-                $"Could not find PlayerAnimatorController on {playerObject.name}."
+                $"Could not find PlayerManager on {playerObject.name}."
             );
 
             return;
         }
 
-        player.TakeHit();
+        hitTargets.Add(playerObject);
+
+        playerManager.TakeHit();
     }
 }

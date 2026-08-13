@@ -5,7 +5,7 @@ public class PlayerHitStateBehaviour : StateMachineBehaviour
     [Header("Hit Reaction")]
     [SerializeField] private float recoveryTime = 0.9f;
 
-    private PlayerAnimatorController player;
+    private PlayerManager playerManager;
     private bool recoveryStarted;
 
     public override void OnStateEnter(
@@ -13,7 +13,7 @@ public class PlayerHitStateBehaviour : StateMachineBehaviour
         AnimatorStateInfo stateInfo,
         int layerIndex)
     {
-        player = animator.GetComponent<PlayerAnimatorController>();
+        playerManager = animator.GetComponent<PlayerManager>();
 
         recoveryStarted = false;
 
@@ -25,7 +25,7 @@ public class PlayerHitStateBehaviour : StateMachineBehaviour
         AnimatorStateInfo stateInfo,
         int layerIndex)
     {
-        if (player == null || recoveryStarted)
+        if (playerManager == null || recoveryStarted)
         {
             return;
         }
@@ -36,7 +36,7 @@ public class PlayerHitStateBehaviour : StateMachineBehaviour
         {
             recoveryStarted = true;
 
-            player.EndHitReaction();
+            playerManager.EndHitReaction();
 
             Debug.Log("HIT RECOVERY");
         }

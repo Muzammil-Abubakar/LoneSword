@@ -6,7 +6,8 @@ public class SingleSlashStateBehaviour : StateMachineBehaviour
     [SerializeField] private float hitStart = 0.25f;
     [SerializeField] private float hitEnd = 0.55f;
 
-    private PlayerAnimatorController player;
+    private PlayerManager playerManager;
+
     private bool hitboxEnabled;
 
     public override void OnStateEnter(
@@ -14,7 +15,8 @@ public class SingleSlashStateBehaviour : StateMachineBehaviour
         AnimatorStateInfo stateInfo,
         int layerIndex)
     {
-        player = animator.GetComponent<PlayerAnimatorController>();
+        playerManager =
+            animator.GetComponent<PlayerManager>();
 
         hitboxEnabled = false;
     }
@@ -24,7 +26,8 @@ public class SingleSlashStateBehaviour : StateMachineBehaviour
         AnimatorStateInfo stateInfo,
         int layerIndex)
     {
-        float time = stateInfo.normalizedTime;
+        float time =
+            stateInfo.normalizedTime;
 
         bool shouldBeActive =
             time >= hitStart &&
@@ -33,12 +36,14 @@ public class SingleSlashStateBehaviour : StateMachineBehaviour
         if (shouldBeActive && !hitboxEnabled)
         {
             hitboxEnabled = true;
-            player.EnableHitbox();
+
+            playerManager.EnableAttackHitbox();
         }
         else if (!shouldBeActive && hitboxEnabled)
         {
             hitboxEnabled = false;
-            player.DisableHitbox();
+
+            playerManager.DisableAttackHitbox();
         }
     }
 
@@ -48,16 +53,13 @@ public class SingleSlashStateBehaviour : StateMachineBehaviour
         int layerIndex)
     {
         // Safety cleanup.
-        // The hitbox must never remain active after
-        // leaving the attack state.
         if (hitboxEnabled)
         {
             hitboxEnabled = false;
-            player.DisableHitbox();
+
+            playerManager.DisableAttackHitbox();
         }
 
-        // Tell the player controller that the
-        // attack animation has completely finished.
-        player.EndSlash();
+        playerManager.EndAttack();
     }
 }

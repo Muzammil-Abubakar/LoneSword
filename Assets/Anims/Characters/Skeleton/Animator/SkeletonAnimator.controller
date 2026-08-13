@@ -132,6 +132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65aef1d4beedf0645ba11d3c8be1694d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkeletonAttackState
+  hitStart: 0.45
+  hitEnd: 0.55
 --- !u!206 &-1193496887689901901
 BlendTree:
   m_ObjectHideFlags: 1
