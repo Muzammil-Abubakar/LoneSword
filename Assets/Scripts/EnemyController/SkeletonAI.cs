@@ -74,18 +74,7 @@ public class SkeletonAI : MonoBehaviour
         if (isAttacking)
         {
             // Completely stop movement while attacking.
-            agent.isStopped = true;
-            agent.velocity = Vector3.zero;
-
-            animator.SetFloat(
-                "Speed",
-                0f,
-                0.1f,
-                Time.deltaTime
-            );
-
-            attackTimer -= Time.deltaTime;
-
+            StopMoving();
             return;
         }
 
@@ -108,6 +97,21 @@ public class SkeletonAI : MonoBehaviour
         }
 
         // ---------------------------------------------
+        // COMBAT DISTANCE
+        // ---------------------------------------------
+
+        if (distance <= stopDistance)
+        {
+            isChasing = false;
+
+            StopMoving();
+
+            TryAttack();
+
+            return;
+        }
+
+        // ---------------------------------------------
         // CHASE STATE
         // ---------------------------------------------
 
@@ -115,25 +119,6 @@ public class SkeletonAI : MonoBehaviour
         {
             isChasing = true;
         }
-
-        if (isChasing && distance <= stopDistance)
-        {
-            isChasing = false;
-        }
-
-        // ---------------------------------------------
-        // ATTACK
-        // ---------------------------------------------
-
-        if (!isChasing && distance <= stopDistance)
-        {
-            TryAttack();
-            return;
-        }
-
-        // ---------------------------------------------
-        // CHASE
-        // ---------------------------------------------
 
         if (isChasing)
         {
@@ -238,9 +223,7 @@ public class SkeletonAI : MonoBehaviour
         isChasing = false;
 
         // Completely stop the NavMeshAgent.
-        agent.isStopped = true;
-        agent.velocity = Vector3.zero;
-        agent.ResetPath();
+        StopMoving();
 
         // Face the player before attacking.
         Vector3 directionToPlayer =
@@ -254,15 +237,10 @@ public class SkeletonAI : MonoBehaviour
                 Quaternion.LookRotation(directionToPlayer);
         }
 
-        // Stop locomotion animation.
-        animator.SetFloat("Speed", 0f);
-
         // Start cooldown.
         attackTimer = attackCooldown;
 
-        Debug.Log(
-            $"{gameObject.name} is ATTACKING!"
-        );
+        
 
         // Trigger attack animation.
         animator.SetTrigger("Attack");
@@ -272,16 +250,26 @@ public class SkeletonAI : MonoBehaviour
     // ATTACK END
     // --------------------------------------------------
 
-    // Call this from an Animation Event at the END
-    // of the attack animation.
+    // Called by SkeletonAttackState when the
+    // EnemyAttack Animator state finishes.
     public void EndAttack()
     {
+        if (!isAttacking)
+        {
+            return;
+        }
+
         isAttacking = false;
 
-        if (agent != null)
-        {
-            agent.isStopped = false;
-        }
+        // IMPORTANT:
+        // Do NOT immediately resume the NavMeshAgent.
+        //
+        // The next Update() will look at the player's
+        // current position and decide whether we should
+        // chase or remain stopped.
+        StopMoving();
+
+        
     }
 
     // --------------------------------------------------

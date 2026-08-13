@@ -137,6 +137,15 @@ public class PlayerAnimatorController : MonoBehaviour
 
         DisableHitbox();
     }
+    
+    // --------------------------------------------------
+// HIT REACTION
+// --------------------------------------------------
+
+    public void TakeHit()
+    {
+        Debug.Log("PLAYER WAS HIT!");
+    }
 
     // --------------------------------------------------
     // HITBOX
