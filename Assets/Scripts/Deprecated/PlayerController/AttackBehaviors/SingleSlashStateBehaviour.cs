@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class SingleSlashStateBehaviour : StateMachineBehaviour
 {
@@ -62,4 +62,4 @@ public class SingleSlashStateBehaviour : StateMachineBehaviour
 
         playerManager.EndAttack();
     }
-}
+}*/

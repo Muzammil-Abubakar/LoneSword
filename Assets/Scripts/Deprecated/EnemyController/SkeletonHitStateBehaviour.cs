@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class SkeletonHitStateBehaviour : StateMachineBehaviour
 {
@@ -20,4 +20,4 @@ public class SkeletonHitStateBehaviour : StateMachineBehaviour
     {
         skeletonCombat.FinishHitReaction();
     }
-}
+}*/

@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class SkeletonAttackState : StateMachineBehaviour
 {
@@ -85,4 +85,4 @@ public class SkeletonAttackState : StateMachineBehaviour
             skeleton.EndAttack();
         }
     }
-}
+}*/

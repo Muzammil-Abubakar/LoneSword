@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackHitbox : MonoBehaviour
@@ -52,4 +52,4 @@ public class AttackHitbox : MonoBehaviour
 
         skeleton.TakeHit();
     }
-}
+}*/

@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class SkeletonCombat : MonoBehaviour
 {
@@ -20,4 +20,4 @@ public class SkeletonCombat : MonoBehaviour
     {
         skeletonAI.EndHitReaction();
     }
-}
+}*/

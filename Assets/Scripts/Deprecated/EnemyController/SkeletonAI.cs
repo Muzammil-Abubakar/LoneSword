@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using UnityEngine.AI;
 
 public class SkeletonAI : MonoBehaviour
@@ -357,4 +357,4 @@ public class SkeletonAI : MonoBehaviour
             Vector3.one * 0.3f
         );
     }
-}
+}*/
