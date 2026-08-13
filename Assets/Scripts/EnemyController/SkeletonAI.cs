@@ -12,9 +12,15 @@ public class SkeletonAI : MonoBehaviour
     [Header("Combat Distance")]
     [SerializeField] private float chaseDistance = 1.8f;
     [SerializeField] private float stopDistance = 1.3f;
+    [SerializeField] private float attackCooldown = 1.5f;
 
     [Header("Movement")]
-    [SerializeField] private float movementSpeed = 3.5f;
+    [SerializeField] private float closeSpeed = 1.5f;
+    [SerializeField] private float farSpeed = 4f;
+
+    [Tooltip("Distance at which the skeleton switches from close speed to far speed.")]
+    [SerializeField] private float fastSpeedDistance = 4f;
+
     [SerializeField] private float acceleration = 12f;
 
     [Header("Rotation")]
@@ -23,15 +29,18 @@ public class SkeletonAI : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
 
+    private float attackTimer;
+
     private bool isHit;
     private bool isChasing;
+    private bool isAttacking;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        agent.speed = movementSpeed;
+        agent.speed = closeSpeed;
         agent.acceleration = acceleration;
         agent.stoppingDistance = stopDistance;
         agent.autoBraking = true;
@@ -42,18 +51,55 @@ public class SkeletonAI : MonoBehaviour
 
     private void Update()
     {
-        if (player == null || isHit)
+        if (player == null)
         {
             StopMoving();
             return;
         }
+
+        // ---------------------------------------------
+        // HIT REACTION
+        // ---------------------------------------------
+
+        if (isHit)
+        {
+            StopMoving();
+            return;
+        }
+
+        // ---------------------------------------------
+        // ATTACK
+        // ---------------------------------------------
+
+        if (isAttacking)
+        {
+            // Completely stop movement while attacking.
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+
+            animator.SetFloat(
+                "Speed",
+                0f,
+                0.1f,
+                Time.deltaTime
+            );
+
+            attackTimer -= Time.deltaTime;
+
+            return;
+        }
+
+        attackTimer -= Time.deltaTime;
 
         float distance = Vector3.Distance(
             transform.position,
             player.position
         );
 
-        // Outside detection range.
+        // ---------------------------------------------
+        // OUTSIDE DETECTION RANGE
+        // ---------------------------------------------
+
         if (distance > detectionRange)
         {
             isChasing = false;
@@ -61,21 +107,37 @@ public class SkeletonAI : MonoBehaviour
             return;
         }
 
-        // Start chasing once the player moves far enough away.
+        // ---------------------------------------------
+        // CHASE STATE
+        // ---------------------------------------------
+
         if (!isChasing && distance > chaseDistance)
         {
             isChasing = true;
         }
 
-        // Stop once close enough.
         if (isChasing && distance <= stopDistance)
         {
             isChasing = false;
         }
 
+        // ---------------------------------------------
+        // ATTACK
+        // ---------------------------------------------
+
+        if (!isChasing && distance <= stopDistance)
+        {
+            TryAttack();
+            return;
+        }
+
+        // ---------------------------------------------
+        // CHASE
+        // ---------------------------------------------
+
         if (isChasing)
         {
-            ChasePlayer();
+            ChasePlayer(distance);
         }
         else
         {
@@ -83,10 +145,27 @@ public class SkeletonAI : MonoBehaviour
         }
     }
 
-    private void ChasePlayer()
+    // --------------------------------------------------
+    // CHASE
+    // --------------------------------------------------
+
+    private void ChasePlayer(float distance)
     {
         agent.isStopped = false;
         agent.stoppingDistance = stopDistance;
+
+        // ---------------------------------------------
+        // DYNAMIC SPEED
+        // ---------------------------------------------
+
+        if (distance >= fastSpeedDistance)
+        {
+            agent.speed = farSpeed;
+        }
+        else
+        {
+            agent.speed = closeSpeed;
+        }
 
         agent.SetDestination(player.position);
 
@@ -108,9 +187,12 @@ public class SkeletonAI : MonoBehaviour
         direction.y = 0f;
 
         if (direction.sqrMagnitude < 0.01f)
+        {
             return;
+        }
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        Quaternion targetRotation =
+            Quaternion.LookRotation(direction);
 
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
@@ -119,10 +201,15 @@ public class SkeletonAI : MonoBehaviour
         );
     }
 
+    // --------------------------------------------------
+    // HIT REACTION
+    // --------------------------------------------------
+
     public void StartHitReaction()
     {
         isHit = true;
         isChasing = false;
+        isAttacking = false;
 
         StopMoving();
 
@@ -135,24 +222,101 @@ public class SkeletonAI : MonoBehaviour
         isHit = false;
     }
 
-    private void StopMoving()
+    // --------------------------------------------------
+    // ATTACK
+    // --------------------------------------------------
+
+    private void TryAttack()
     {
+        if (attackTimer > 0f)
+        {
+            return;
+        }
+
+        // Enter attack state.
+        isAttacking = true;
+        isChasing = false;
+
+        // Completely stop the NavMeshAgent.
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
         agent.ResetPath();
 
-        animator.SetFloat(
-            "Speed",
-            0f,
-            0.1f,
-            Time.deltaTime
+        // Face the player before attacking.
+        Vector3 directionToPlayer =
+            player.position - transform.position;
+
+        directionToPlayer.y = 0f;
+
+        if (directionToPlayer.sqrMagnitude > 0.0001f)
+        {
+            transform.rotation =
+                Quaternion.LookRotation(directionToPlayer);
+        }
+
+        // Stop locomotion animation.
+        animator.SetFloat("Speed", 0f);
+
+        // Start cooldown.
+        attackTimer = attackCooldown;
+
+        Debug.Log(
+            $"{gameObject.name} is ATTACKING!"
         );
+
+        // Trigger attack animation.
+        animator.SetTrigger("Attack");
     }
+
+    // --------------------------------------------------
+    // ATTACK END
+    // --------------------------------------------------
+
+    // Call this from an Animation Event at the END
+    // of the attack animation.
+    public void EndAttack()
+    {
+        isAttacking = false;
+
+        if (agent != null)
+        {
+            agent.isStopped = false;
+        }
+    }
+
+    // --------------------------------------------------
+    // MOVEMENT
+    // --------------------------------------------------
+
+    private void StopMoving()
+    {
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+            agent.ResetPath();
+        }
+
+        if (animator != null)
+        {
+            animator.SetFloat(
+                "Speed",
+                0f,
+                0.1f,
+                Time.deltaTime
+            );
+        }
+    }
+
+    // --------------------------------------------------
+    // DEBUG GIZMOS
+    // --------------------------------------------------
 
     private void OnDrawGizmosSelected()
     {
         // Detection range
         Gizmos.color = Color.red;
+
         Gizmos.DrawWireSphere(
             transform.position,
             detectionRange
@@ -160,6 +324,7 @@ public class SkeletonAI : MonoBehaviour
 
         // Chase distance
         Gizmos.color = Color.yellow;
+
         Gizmos.DrawWireSphere(
             transform.position,
             chaseDistance
@@ -167,9 +332,41 @@ public class SkeletonAI : MonoBehaviour
 
         // Stop distance
         Gizmos.color = Color.green;
+
         Gizmos.DrawWireSphere(
             transform.position,
             stopDistance
+        );
+
+        // Fast speed distance
+        Gizmos.color = Color.cyan;
+
+        Gizmos.DrawWireSphere(
+            transform.position,
+            fastSpeedDistance
+        );
+
+        // Current AI state indicator.
+        if (isHit)
+        {
+            Gizmos.color = Color.magenta;
+        }
+        else if (isAttacking)
+        {
+            Gizmos.color = Color.red;
+        }
+        else if (isChasing)
+        {
+            Gizmos.color = Color.blue;
+        }
+        else
+        {
+            Gizmos.color = Color.white;
+        }
+
+        Gizmos.DrawWireCube(
+            transform.position + Vector3.up * 2.5f,
+            Vector3.one * 0.3f
         );
     }
 }

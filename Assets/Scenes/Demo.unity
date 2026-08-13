@@ -1525,6 +1525,10 @@ PrefabInstance:
       propertyPath: stopDistance
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1355029536988262315, guid: b7c624fd7e4a3314999a84db9ea061b2, type: 3}
+      propertyPath: attackCooldown
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2532023567174646787, guid: b7c624fd7e4a3314999a84db9ea061b2, type: 3}
       propertyPath: m_Name
       value: Skeleton
@@ -1597,7 +1601,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 360
   m_StoppingDistance: 0
