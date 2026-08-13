@@ -145,12 +145,18 @@ public class PlayerAnimatorController : MonoBehaviour
 
     public void TakeHit()
     {
-        isSlashing = false;
         isHit = true;
 
+        // Being hit immediately interrupts an attack.
+        isSlashing = false;
+
+        // Stop the player's attack hitbox.
         DisableHitbox();
 
+        // Stop locomotion animation.
         animator.SetFloat("Speed", 0f);
+
+        // Restart Hit through the Animator transition.
         animator.SetTrigger("Hit");
 
         Debug.Log("PLAYER HIT REACTION!");
