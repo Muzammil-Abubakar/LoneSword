@@ -8,6 +8,7 @@ public class PlayerAnimatorController : MonoBehaviour
     private AttackHitbox attackHitbox;
 
     private bool isSlashing;
+    private bool isHit;
 
     // Movement input is sampled every frame.
     // While attacking, it is deliberately not applied.
@@ -51,7 +52,7 @@ public class PlayerAnimatorController : MonoBehaviour
         // We do NOT apply it while attacking.
         currentMoveInput = input.Player.Move.ReadValue<Vector2>();
 
-        if (isSlashing)
+        if (isSlashing || isHit)
         {
             return;
         }
@@ -144,7 +145,21 @@ public class PlayerAnimatorController : MonoBehaviour
 
     public void TakeHit()
     {
-        Debug.Log("PLAYER WAS HIT!");
+        isSlashing = false;
+        isHit = true;
+
+        DisableHitbox();
+
+        animator.SetFloat("Speed", 0f);
+        animator.SetTrigger("Hit");
+
+        Debug.Log("PLAYER HIT REACTION!");
+    }
+    
+    public void EndHitReaction()
+    {
+        isHit = false;
+        Debug.Log("PLAYER HIT REACTION ENDED!");
     }
 
     // --------------------------------------------------
