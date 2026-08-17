@@ -1,23 +1,20 @@
 using UnityEngine;
 
 /// <summary>
-/// Coordinates high-level player state.
-///
-/// This class does not implement movement, input,
-/// animation, combat, health, or hitbox behaviour.
-///
-/// Its responsibility is to control whether the player
-/// is currently permitted to perform certain actions.
+/// Coordinates high-level player state and control.
 /// </summary>
 public sealed class PlayerManager : MonoBehaviour
 {
     [Header("Player Components")]
     [SerializeField] private PlayerMovement playerMovement;
 
+    [Header("Movement State")]
+    [SerializeField] private bool canMove = true;
+
     /// <summary>
     /// Whether the player is currently allowed to move.
     /// </summary>
-    public bool CanMove { get; private set; } = true;
+    public bool CanMove => canMove;
 
     private void Awake()
     {
@@ -31,18 +28,20 @@ public sealed class PlayerManager : MonoBehaviour
 
     /// <summary>
     /// Enables or disables player movement.
-    ///
-    /// Other systems can use this later for:
-    /// - Attacks
-    /// - Stuns
-    /// - Hit reactions
-    /// - Dialogue
-    /// - Cutscenes
-    /// - Death
     /// </summary>
     public void SetMovementEnabled(bool enabled)
     {
-        CanMove = enabled;
+        canMove = enabled;
+
+        Debug.Log(
+            $"[{nameof(PlayerManager)}] CanMove changed to: {canMove}",
+            this
+        );
+
+        if (!canMove)
+        {
+            playerMovement.StopMovement();
+        }
     }
 
     private void ValidateReferences()

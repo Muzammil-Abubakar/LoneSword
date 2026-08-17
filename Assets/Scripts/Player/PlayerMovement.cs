@@ -111,7 +111,7 @@ public sealed class PlayerMovement : MonoBehaviour
         RotateTowards(MovementDirection);
     }
 
-    private void StopMovement()
+    public void StopMovement()
     {
         CurrentSpeed = 0f;
         MovementDirection = Vector3.zero;
