@@ -11,6 +11,9 @@ public sealed class PlayerAnimator : MonoBehaviour
 {
     private static readonly int SpeedHash =
         Animator.StringToHash("Speed");
+    
+    private static readonly int SlashHash =
+        Animator.StringToHash("Slash1");
 
     [Header("References")]
     [SerializeField] private PlayerMovement playerMovement;
@@ -52,6 +55,11 @@ public sealed class PlayerAnimator : MonoBehaviour
             speedDamping,
             Time.deltaTime
         );
+    }
+    
+    public void PlayAttack()
+    {
+        animator.SetTrigger(SlashHash);
     }
 
     private void ValidateReferences()
