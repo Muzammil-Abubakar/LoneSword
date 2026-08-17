@@ -995,6 +995,7 @@ GameObject:
   - component: {fileID: 6260816870904908171}
   - component: {fileID: 2266521361076027206}
   - component: {fileID: 8473357353269654602}
+  - component: {fileID: 8832581818285838786}
   m_Layer: 0
   m_Name: Player-New
   m_TagString: Player
@@ -1107,6 +1108,8 @@ MonoBehaviour:
   playerManager: {fileID: 808950977769724243}
   walkSpeed: 2
   runSpeed: 5
+  acceleration: 25
+  deceleration: 16
   rotationSpeed: 10
   movementThreshold: 0.001
 --- !u!114 &2266521361076027206
@@ -1122,8 +1125,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   playerMovement: {fileID: 6260816870904908171}
-  animator: {fileID: 6722723599862474731}
-  speedDamping: 0.05
 --- !u!114 &8473357353269654602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1140,6 +1141,20 @@ MonoBehaviour:
   playerManager: {fileID: 808950977769724243}
   playerAnimator: {fileID: 2266521361076027206}
   attackHitbox: {fileID: 3984446435150962725}
+--- !u!114 &8832581818285838786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3472838039418500947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e67544a3c7a7c441930e479ac114b13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHitReaction
+  playerManager: {fileID: 808950977769724243}
+  playerAnimator: {fileID: 2266521361076027206}
 --- !u!1 &3742842339091414343
 GameObject:
   m_ObjectHideFlags: 0
