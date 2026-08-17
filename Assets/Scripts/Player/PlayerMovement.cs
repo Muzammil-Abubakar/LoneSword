@@ -17,6 +17,12 @@ public sealed class PlayerMovement : MonoBehaviour
     [SerializeField, Min(0f)] private float walkSpeed = 2f;
     [SerializeField, Min(0f)] private float runSpeed = 5f;
 
+    [SerializeField, Min(0f)]
+    private float acceleration = 12f;
+
+    [SerializeField, Min(0f)]
+    private float deceleration = 16f;
+
     [Header("Rotation")]
     [SerializeField, Min(0f)] private float rotationSpeed = 10f;
 
@@ -29,8 +35,9 @@ public sealed class PlayerMovement : MonoBehaviour
     /// Current movement speed.
     ///
     /// 0 = idle
-    /// 2 = walking
-    /// 5 = running
+    /// Between walk/run speed = accelerating/decelerating
+    /// walkSpeed = walking
+    /// runSpeed = running
     ///
     /// This value is consumed by PlayerAnimator.
     /// </summary>
@@ -44,7 +51,8 @@ public sealed class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Whether the character is currently moving.
     /// </summary>
-    public bool IsMoving => CurrentSpeed > movementThreshold;
+    public bool IsMoving =>
+        CurrentSpeed > movementThreshold;
 
     private void Awake()
     {
@@ -90,25 +98,52 @@ public sealed class PlayerMovement : MonoBehaviour
 
         if (inputMagnitude <= movementThreshold)
         {
-            StopMovement();
+            Decelerate();
             return;
         }
 
         MovementDirection = movement.normalized;
 
-        CurrentSpeed = playerInput.IsRunning
+        float targetSpeed = playerInput.IsRunning
             ? runSpeed
             : walkSpeed;
+
+        targetSpeed *= inputMagnitude;
+
+        float speedChangeRate =
+            targetSpeed > CurrentSpeed
+                ? acceleration
+                : deceleration;
+
+        CurrentSpeed = Mathf.MoveTowards(
+            CurrentSpeed,
+            targetSpeed,
+            speedChangeRate * Time.deltaTime
+        );
 
         Vector3 movementDelta =
             MovementDirection *
             CurrentSpeed *
-            inputMagnitude *
             Time.deltaTime;
 
         characterController.Move(movementDelta);
 
         RotateTowards(MovementDirection);
+    }
+
+    private void Decelerate()
+    {
+        CurrentSpeed = Mathf.MoveTowards(
+            CurrentSpeed,
+            0f,
+            deceleration * Time.deltaTime
+        );
+
+        if (CurrentSpeed <= movementThreshold)
+        {
+            CurrentSpeed = 0f;
+            MovementDirection = Vector3.zero;
+        }
     }
 
     public void StopMovement()

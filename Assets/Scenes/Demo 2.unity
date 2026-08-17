@@ -756,23 +756,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 635339480}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &795914694 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 760389738883062450, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
-  m_PrefabInstance: {fileID: 7729611216086150438}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &795914697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 795914694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07854d5f7980a184499fe6c1d6b842b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,25 +1239,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2266521361076027206, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
-      propertyPath: speedDamping
-      value: 0.05
-      objectReference: {fileID: 0}
     - target: {fileID: 3472838039418500947, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
       propertyPath: m_Name
       value: Player-New
-      objectReference: {fileID: 0}
-    - target: {fileID: 3932913153817174256, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
-      propertyPath: m_Center.y
-      value: 0.82
-      objectReference: {fileID: 0}
-    - target: {fileID: 3932913153817174256, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
-      propertyPath: m_SkinWidth
-      value: 0.0001
-      objectReference: {fileID: 0}
-    - target: {fileID: 3932913153817174256, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
-      propertyPath: m_StepOffset
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5027698790043989354, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1316,17 +1283,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6260816870904908171, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
-      propertyPath: runSpeed
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 760389738883062450, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 795914697}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 098312514a27d9641a14a59104d43bbc, type: 3}
 --- !u!4 &9033176203474127708 stripped
 Transform:

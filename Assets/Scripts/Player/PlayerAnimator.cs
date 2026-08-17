@@ -1,81 +1,69 @@
 using UnityEngine;
 
-/// <summary>
-/// Responsible only for communicating player state
-/// to the Animator.
-///
-/// This class does not move the player and does not
-/// read input directly.
-/// </summary>
 public sealed class PlayerAnimator : MonoBehaviour
 {
     private static readonly int SpeedHash =
         Animator.StringToHash("Speed");
-    
+
     private static readonly int SlashHash =
         Animator.StringToHash("Slash1");
 
-    [Header("References")]
-    [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private Animator animator;
+    private static readonly int HitHash =
+        Animator.StringToHash("Hit");
 
-    [Header("Animation")]
-    [SerializeField, Min(0f)] private float speedDamping = 0.15f;
+    [SerializeField] private PlayerMovement playerMovement;
+
+    private Animator animator;
 
     private void Awake()
     {
+        animator = GetComponent<Animator>();
+
         if (playerMovement == null)
         {
             playerMovement = GetComponent<PlayerMovement>();
         }
 
-        if (animator == null)
-        {
-            animator = GetComponentInChildren<Animator>();
-        }
-
         ValidateReferences();
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         UpdateLocomotion();
     }
 
-    private void UpdateLocomotion()
-    {
-        if (animator == null || playerMovement == null)
-        {
-            return;
-        }
-
-        animator.SetFloat(
-            SpeedHash,
-            playerMovement.CurrentSpeed,
-            speedDamping,
-            Time.deltaTime
-        );
-    }
-    
     public void PlayAttack()
     {
         animator.SetTrigger(SlashHash);
     }
 
+    public void PlayHit()
+    {
+        animator.SetTrigger(HitHash);
+    }
+
+    private void UpdateLocomotion()
+    {
+        animator.SetFloat(
+            SpeedHash,
+            playerMovement.CurrentSpeed
+        );
+    }
+
     private void ValidateReferences()
     {
-        if (playerMovement == null)
+        if (animator == null)
         {
             Debug.LogError(
-                $"{nameof(PlayerAnimator)} requires a {nameof(PlayerMovement)} reference.",
+                $"{nameof(PlayerAnimator)} requires an Animator component.",
                 this
             );
         }
 
-        if (animator == null)
+        if (playerMovement == null)
         {
             Debug.LogError(
-                $"{nameof(PlayerAnimator)} requires an Animator reference.",
+                $"{nameof(PlayerAnimator)} requires a {nameof(PlayerMovement)} reference.",
                 this
             );
         }
