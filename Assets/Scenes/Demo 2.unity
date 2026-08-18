@@ -863,7 +863,20 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 3
+--- !u!114 &1163632116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163632109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f631b57ed5ba5af419edbb5100ff899f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimator
+  enemyMovement: {fileID: 1163632113}
 --- !u!1 &1946237488
 GameObject:
   m_ObjectHideFlags: 0
@@ -1082,6 +1095,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8011790446711952338, guid: b7c624fd7e4a3314999a84db9ea061b2, type: 3}
+      propertyPath: m_Center.y
+      value: 0.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 8011790446711952338, guid: b7c624fd7e4a3314999a84db9ea061b2, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1095,6 +1116,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2532023567174646787, guid: b7c624fd7e4a3314999a84db9ea061b2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1163632113}
+    - targetCorrespondingSourceObject: {fileID: 2532023567174646787, guid: b7c624fd7e4a3314999a84db9ea061b2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1163632116}
   m_SourcePrefab: {fileID: 100100000, guid: b7c624fd7e4a3314999a84db9ea061b2, type: 3}
 --- !u!1 &2063764528
 GameObject:
