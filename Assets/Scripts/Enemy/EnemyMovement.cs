@@ -103,6 +103,25 @@ public sealed class EnemyMovement : MonoBehaviour
         CurrentSpeed = 0f;
     }
 
+    public void FaceTarget(Transform target)
+{
+    if (target == null)
+    {
+        return;
+    }
+
+    Vector3 direction = target.position - transform.position;
+    direction.y = 0f;
+
+    if (direction.sqrMagnitude <= 0.0001f)
+    {
+        return;
+    }
+
+    transform.rotation =
+        Quaternion.LookRotation(direction);
+}
+
     private bool CanMove()
     {
         return enemyManager != null &&
