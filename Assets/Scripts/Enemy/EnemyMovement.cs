@@ -8,6 +8,9 @@ public sealed class EnemyMovement : MonoBehaviour
     [SerializeField] private EnemyManager enemyManager;
 
     [Header("Movement")]
+
+    [SerializeField, Min(0f)]
+    private float stoppingDeceleration = 16f;
     [SerializeField, Min(0f)] private float closeSpeed = 1.5f;
     [SerializeField, Min(0f)] private float farSpeed = 4f;
 
@@ -40,7 +43,7 @@ public sealed class EnemyMovement : MonoBehaviour
     {
         if (!CanMove())
         {
-            StopMovement();
+            DecelerateToStop();
             return;
         }
 
@@ -48,7 +51,7 @@ public sealed class EnemyMovement : MonoBehaviour
 
         if (target == null)
         {
-            StopMovement();
+            DecelerateToStop();
             return;
         }
 
@@ -94,6 +97,24 @@ public sealed class EnemyMovement : MonoBehaviour
         );
     }
 
+    private void DecelerateToStop()
+    {
+        agent.isStopped = true;
+
+        CurrentSpeed = Mathf.MoveTowards(
+            CurrentSpeed,
+            0f,
+            stoppingDeceleration * Time.deltaTime
+        );
+
+        if (CurrentSpeed <= 0.001f)
+        {
+            CurrentSpeed = 0f;
+            agent.velocity = Vector3.zero;
+            agent.ResetPath();
+        }
+    }
+
     public void StopMovement()
     {
         agent.isStopped = true;
@@ -104,23 +125,23 @@ public sealed class EnemyMovement : MonoBehaviour
     }
 
     public void FaceTarget(Transform target)
-{
-    if (target == null)
     {
-        return;
+        if (target == null)
+        {
+            return;
+        }
+
+        Vector3 direction = target.position - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude <= 0.0001f)
+        {
+            return;
+        }
+
+        transform.rotation =
+            Quaternion.LookRotation(direction);
     }
-
-    Vector3 direction = target.position - transform.position;
-    direction.y = 0f;
-
-    if (direction.sqrMagnitude <= 0.0001f)
-    {
-        return;
-    }
-
-    transform.rotation =
-        Quaternion.LookRotation(direction);
-}
 
     private bool CanMove()
     {
