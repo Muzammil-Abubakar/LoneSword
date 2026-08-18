@@ -33,10 +33,6 @@ public sealed class PlayerManager : MonoBehaviour
     {
         canMove = enabled;
 
-        Debug.Log(
-            $"[{nameof(PlayerManager)}] CanMove changed to: {canMove}",
-            this
-        );
 
         if (!canMove)
         {
