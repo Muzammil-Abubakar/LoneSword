@@ -9,8 +9,10 @@ public sealed class PlayerCombat : MonoBehaviour
     [SerializeField] private AttackHitbox attackHitbox;
 
     private bool isAttacking;
+    private bool isHitReacting;
 
     public bool IsAttacking => isAttacking;
+    public bool IsHitReacting => isHitReacting;
 
     private void Awake()
     {
@@ -55,7 +57,7 @@ public sealed class PlayerCombat : MonoBehaviour
 
     private void StartAttack()
     {
-        if (isAttacking)
+        if (isAttacking || isHitReacting)
         {
             return;
         }
@@ -74,7 +76,7 @@ public sealed class PlayerCombat : MonoBehaviour
 
     public void EndAttack()
     {
-        if (!isAttacking)
+        if (!isAttacking || isHitReacting)
         {
             return;
         }
@@ -96,6 +98,27 @@ public sealed class PlayerCombat : MonoBehaviour
         isAttacking = false;
 
         DisableHitbox();
+    }
+
+    /// <summary>
+    /// Enters hit reaction state, canceling any in-progress attack.
+    /// This is called by PlayerHitReaction when the player is hit.
+    /// </summary>
+    public void EnterHitState()
+    {
+        isHitReacting = true;
+        isAttacking = false;
+        
+        DisableHitbox();
+    }
+
+    /// <summary>
+    /// Exits hit reaction state, allowing attacks to resume.
+    /// This is called at the end of the hit reaction animation.
+    /// </summary>
+    public void ExitHitState()
+    {
+        isHitReacting = false;
     }
 
     public void EnableHitbox()
