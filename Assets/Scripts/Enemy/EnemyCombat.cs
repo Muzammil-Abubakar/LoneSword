@@ -7,6 +7,8 @@ public sealed class EnemyCombat : MonoBehaviour
     [SerializeField] private EnemyMovement enemyMovement;
     [SerializeField] private EnemyAnimator enemyAnimator;
 
+    [SerializeField] private AttackHitbox attackHitbox;
+
     [Header("Combat")]
     [SerializeField, Min(0f)] private float attackRange = 1.5f;
 
@@ -29,6 +31,11 @@ public sealed class EnemyCombat : MonoBehaviour
         if (enemyAnimator == null)
         {
             enemyAnimator = GetComponent<EnemyAnimator>();
+        }
+
+        if (attackHitbox == null)
+        {
+            attackHitbox = GetComponentInChildren<AttackHitbox>(true);
         }
 
         ValidateReferences();
@@ -86,7 +93,29 @@ public sealed class EnemyCombat : MonoBehaviour
 
         isAttacking = false;
 
+        DisableHitbox();
+
         enemyManager.SetMovementEnabled(true);
+    }
+
+        public void EnableHitbox()
+    {
+        if (!isAttacking || attackHitbox == null)
+        {
+            return;
+        }
+
+        attackHitbox.EnableHitbox();
+    }
+
+    public void DisableHitbox()
+    {
+        if (attackHitbox == null)
+        {
+            return;
+        }
+
+        attackHitbox.DisableHitbox();
     }
 
     public void CancelAttack()

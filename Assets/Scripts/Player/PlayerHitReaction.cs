@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public sealed class PlayerHitReaction : MonoBehaviour
+public sealed class PlayerHitReaction : MonoBehaviour, IHitReceiver
 {
     [Header("References")]
     [SerializeField] private PlayerManager playerManager;
@@ -21,7 +21,10 @@ public sealed class PlayerHitReaction : MonoBehaviour
         ValidateReferences();
     }
 
-    public void PlayHit()
+    /// <summary>
+    /// Called when the player receives a hit.
+    /// </summary>
+    public void ReceiveHit()
     {
         playerManager.SetMovementEnabled(false);
         playerAnimator.PlayHit();
