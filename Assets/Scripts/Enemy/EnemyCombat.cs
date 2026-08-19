@@ -13,8 +13,10 @@ public sealed class EnemyCombat : MonoBehaviour
     [SerializeField, Min(0f)] private float attackRange = 1.5f;
 
     private bool isAttacking;
+    private bool isHitReacting;
 
     public bool IsAttacking => isAttacking;
+    public bool IsHitReacting => isHitReacting;
 
     private void Awake()
     {
@@ -43,7 +45,7 @@ public sealed class EnemyCombat : MonoBehaviour
 
     private void Update()
     {
-        if (isAttacking)
+        if (isAttacking || isHitReacting)
         {
             return;
         }
@@ -86,7 +88,7 @@ public sealed class EnemyCombat : MonoBehaviour
 
     public void EndAttack()
     {
-        if (!isAttacking)
+        if (!isAttacking || isHitReacting)
         {
             return;
         }
@@ -126,6 +128,20 @@ public sealed class EnemyCombat : MonoBehaviour
         }
 
         isAttacking = false;
+        DisableHitbox();
+    }
+
+    public void EnterHitState()
+    {
+        isHitReacting = true;
+        isAttacking = false;
+        
+        DisableHitbox();
+    }
+
+    public void ExitHitState()
+    {
+        isHitReacting = false;
     }
 
     private void ValidateReferences()

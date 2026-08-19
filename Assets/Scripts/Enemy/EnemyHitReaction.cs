@@ -29,7 +29,7 @@ public sealed class EnemyHitReaction : MonoBehaviour, IHitReceiver
 
     public void ReceiveHit()
     {
-        enemyCombat.CancelAttack();
+        enemyCombat.EnterHitState();
 
         enemyManager.SetMovementEnabled(false);
 
@@ -38,6 +38,8 @@ public sealed class EnemyHitReaction : MonoBehaviour, IHitReceiver
 
     public void EndHitReaction()
     {
+        enemyCombat.ExitHitState();
+
         enemyManager.SetMovementEnabled(true);
     }
 
